@@ -175,15 +175,10 @@ Accuracy: 0.8452
 ```
 sports-politics-classifier/
 │
-├── B23CS1095_prob4.py          # Main implementation
+├── B23CS1095_prob4.py           # Main implementation
 ├── README.md                    # This file
-├── B23CS1095_Report_Final.pdf                   # Detailed analysis report
-├── 20news-18828/               # Dataset directory
-   ├── rec.sport.baseball/
-   ├── rec.sport.hockey/
-   ├── talk.politics.guns/
-   ├── talk.politics.mideast/
-   └── talk.politics.misc/
+├── B23CS1095_Report_Final.pdf   # Detailed analysis report
+
 
 ```
 
