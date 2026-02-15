@@ -1,293 +1,269 @@
 # Sports vs Politics Text Classifier
 
-A comprehensive machine learning project that classifies text documents as either **Sports** or **Politics** using multiple ML techniques implemented from scratch.
+A comparative study of machine learning approaches for binary text classification, distinguishing between sports and politics-related documents from the 20 Newsgroups dataset.
 
-## Table of Contents
-- [Overview](#overview)
-- [Dataset](#dataset)
-- [Feature Extraction](#feature-extraction)
-- [Machine Learning Algorithms](#machine-learning-algorithms)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Results](#results)
-- [Project Structure](#project-structure)
-- [Limitations](#limitations)
+## Project Overview
 
-##  Overview
+This project implements three classical machine learning algorithms from scratch to classify newsgroup posts as either sports or politics-related. We evaluate how different feature extraction methods (Bag of Words, Bigrams, TF-IDF) impact classification performance across Naive Bayes, Logistic Regression, and K-Nearest Neighbors classifiers.
 
-This project implements a binary text classification system to distinguish between sports and politics articles. The system is built entirely from scratch using only Python standard libraries, without relying on external ML frameworks like scikit-learn.
+**Best Performance:** 96.97% accuracy using Naive Bayes with Bag of Words features.
 
-**Key Features:**
-- Three different ML algorithms implemented from scratch
-- Multiple feature representation techniques
-- Comprehensive evaluation metrics
-- Detailed comparative analysis
+## Motivation
+
+Text classification is fundamental to many NLP applications. This project explores:
+- Whether simple feature representations can outperform complex ones
+- How different algorithms respond to various feature engineering choices
+- The practical tradeoffs between model complexity and performance
 
 ## Dataset
 
-### Data Collection
-The dataset was created by collecting text samples from two categories:
-- **Sports**: Articles about various sports including basketball, football, tennis, cricket, etc.
-- **Politics**: Articles about government, legislation, elections, and policy matters
+### Source
+We use a subset of the **20 Newsgroups dataset**, specifically:
 
-### Dataset Statistics
-- **Total Documents**: 40 (20 sports + 20 politics)
-- **Split Ratio**: 80% training, 20% testing
-- **Average Document Length**: ~10-15 words per document
-- **Vocabulary Size**: ~500 unique terms
+**Sports Category (2 newsgroups):**
+- `rec.sport.baseball` - Baseball discussions
+- `rec.sport.hockey` - Hockey discussions
 
-### Data Sources
-Data was collected from:
-1. Public domain sports news summaries
-2. Political news headlines and summaries
-3. Wikipedia excerpts on sports events and political topics
+**Politics Category (3 newsgroups):**
+- `talk.politics.guns` - Gun control debates
+- `talk.politics.mideast` - Middle Eastern politics
+- `talk.politics.misc` - General political discussions
 
-## Feature Extraction
+### Statistics
+- **Total documents:** 4,618
+- **Train-test split:** 80-20 (3,694 training, 924 testing)
+- **Vocabulary size:** 500 most frequent terms
+- **Preprocessing:** Lowercase normalization + tokenization (no stemming/stopwords removal)
 
-Three different feature representation techniques were implemented:
+## Implementation Details
 
-### 1. Bag of Words (BoW)
-- Represents documents as word count vectors
-- Ignores word order but captures word frequency
-- Simple yet effective baseline approach
+### Feature Extraction Methods
 
-### 2. N-grams
-- Captures sequences of N consecutive words
-- Implemented with bigrams (N=2)
-- Preserves some word order information
-- Better at capturing phrases like "world cup" or "election results"
+#### 1. Bag of Words (BoW)
+Simple word frequency counts. Each document becomes a vector where each element represents how many times a word appears.
 
-### 3. TF-IDF (Term Frequency-Inverse Document Frequency)
-- Weighs terms by importance
-- Reduces impact of common words
-- Formula: `TF-IDF = (term_freq / doc_length) * log(total_docs / docs_with_term)`
-
-## Machine Learning Algorithms
-
-### 1. Naive Bayes Classifier
-
-**Principle**: Based on Bayes' theorem with strong independence assumptions.
-
-**Implementation**:
 ```python
-P(class|document) = P(class) * ∏ P(word|class)
+# Example: "The game was exciting. The game ended."
+# Vector: [the:2, game:2, was:1, exciting:1, ended:1]
 ```
 
-**Key Features**:
-- Fast training and prediction
-- Works well with small datasets
+#### 2. Bigrams
+Captures consecutive word pairs to preserve some context.
+
+```python
+# Example: "supreme court decision"
+# Bigrams: ["supreme court", "court decision"]
+```
+
+#### 3. TF-IDF
+Weights terms by importance: frequent in document but rare across corpus.
+
+```python
+# Formula: TF-IDF(t,d) = TF(t,d) × log(N / DF(t))
+# Emphasizes discriminative terms
+```
+
+### Classification Algorithms
+
+#### 1. Naive Bayes
+Probabilistic classifier using Bayes' theorem with independence assumption.
+
+**Key Features:**
 - Laplace smoothing to handle unseen words
-- Probabilistic output
+- Log probabilities to prevent underflow
+- Extremely fast training and prediction
 
-**Advantages**:
-- Simple and efficient
-- Performs well on text classification
-- Handles high-dimensional data well
-
-**Disadvantages**:
-- Assumes feature independence (rarely true)
-- Sensitive to feature correlations
-
-### 2. Logistic Regression
-
-**Principle**: Linear model with sigmoid activation for binary classification.
-
-**Implementation**:
+**Implementation:**
 ```python
-σ(z) = 1 / (1 + e^(-z))
-z = w₀ + w₁x₁ + w₂x₂ + ... + wₙxₙ
+P(class|document) ∝ P(class) × ∏ P(word|class)^count
 ```
 
-**Training Method**: Gradient Descent
+#### 2. Logistic Regression
+Discriminative linear classifier with gradient descent optimization.
+
+**Key Features:**
 - Learning rate: 0.1
-- Iterations: 500
-- Updates weights to minimize classification error
+- Iterations: 300
+- Sigmoid activation with numerical stability
 
-**Advantages**:
-- Provides probability estimates
-- Can handle linear and non-linear relationships
-- Interpretable weights
-
-**Disadvantages**:
-- May require feature scaling
-- Sensitive to learning rate
-- Can get stuck in local minima
-
-### 3. K-Nearest Neighbors (KNN)
-
-**Principle**: Classifies based on majority vote of K nearest training examples.
-
-**Implementation**:
-- Distance metric: Euclidean distance
-- K value: 5 (default)
-- Voting: Simple majority
-
-**Advantages**:
-- No training phase (lazy learning)
-- Simple and intuitive
-- Works well with local patterns
-
-**Disadvantages**:
-- Slow prediction for large datasets
-- Sensitive to choice of K
-- Memory intensive (stores all training data)
-- Affected by irrelevant features
-
-##  Installation
-
-### Requirements
-- Python 3.6 or higher
-- No external dependencies (uses only standard library)
-
-### Setup
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/sports-politics-classifier.git
-cd sports-politics-classifier
-
-# No additional installation needed!
+**Implementation:**
+```python
+P(class=1|x) = σ(w·x + b) = 1 / (1 + e^-(w·x + b))
 ```
 
-## Usage
+#### 3. K-Nearest Neighbors
+Instance-based learning using majority voting of k nearest training examples.
 
-### Running the Classifier
-
-```bash
-# Navigate to src directory
-cd src
-
-# Run the main classifier
-python classifier.py
-```
-
-### Expected Output
-
-The program will:
-1. Load the sports and politics datasets
-2. Extract features using different representations
-3. Train and evaluate all three classifiers
-4. Display performance metrics for each combination
-
-### Example Output
-```
-==================================================
-SPORTS vs POLITICS CLASSIFIER
-==================================================
-
-Loading dataset...
-Loaded 40 documents
-Sports: 20, Politics: 20
-
-==================================================
-Feature Representation: Bag of Words
-==================================================
-Training Naive Bayes...
-Accuracy: 0.8750
-
-Training Logistic Regression...
-Accuracy: 0.8125
-
-Training KNN (k=5)...
-Accuracy: 0.7500
-```
+**Key Features:**
+- k = 5 neighbors
+- Euclidean distance metric
+- No explicit training phase
 
 ## Results
 
 ### Performance Comparison
 
 | Feature Type | Naive Bayes | Logistic Regression | KNN (k=5) |
-|--------------|-------------|---------------------|-----------|
-| Bag of Words | 87.5%       | 81.3%              | 75.0%     |
-| Bigrams      | 83.3%       | 79.2%              | 70.8%     |
-| TF-IDF       | 89.6%       | 85.4%              | 77.1%     |
+|-------------|-------------|-------------------|-----------|
+| **Bag of Words** | **96.97%** | **96.00%** | 85.50% |
+| **Bigrams** | 84.52% | 83.33% | 74.13% |
+| **TF-IDF** | 63.10% | 54.65% | **86.69%** |
 
 ### Key Findings
 
-1. **Best Overall**: Naive Bayes with TF-IDF (89.6% accuracy)
-2. **Most Consistent**: Naive Bayes performs well across all feature types
-3. **Feature Importance**: TF-IDF generally outperforms simple BoW
-4. **Trade-offs**: 
-   - Naive Bayes: Fast but assumes independence
-   - Logistic Regression: Good probability estimates
-   - KNN: Simple but slow for large datasets
+1. **Simple > Complex:** BoW outperformed bigrams across all classifiers, challenging the assumption that more complex features always improve performance.
 
-### Detailed Metrics
+2. **Algorithm-Feature Interaction:** 
+   - Naive Bayes + BoW: Best overall (96.97%)
+   - KNN + TF-IDF: KNN's best performance (86.69%)
+   - Naive Bayes + TF-IDF: Catastrophic failure (63.10%)
 
-**Naive Bayes + TF-IDF:**
-- Sports Precision: 0.92, Recall: 0.88, F1: 0.90
-- Politics Precision: 0.87, Recall: 0.91, F1: 0.89
+3. **TF-IDF Surprises:** While KNN thrived with TF-IDF, both Naive Bayes and Logistic Regression performed poorly. This highlights the importance of matching features to algorithm assumptions.
 
-**Logistic Regression + TF-IDF:**
-- Sports Precision: 0.88, Recall: 0.84, F1: 0.86
-- Politics Precision: 0.83, Recall: 0.87, F1: 0.85
+4. **Computational Efficiency:** Naive Bayes offers the best speed-accuracy tradeoff, with single-pass training and fast predictions.
 
-**KNN + TF-IDF:**
-- Sports Precision: 0.80, Recall: 0.76, F1: 0.78
-- Politics Precision: 0.74, Recall: 0.78, F1: 0.76
+## Getting Started
 
-##  Project Structure
+### Prerequisites
+```bash
+Python 3.7+
+No external ML libraries (numpy, scikit-learn) required!
+```
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/sports-politics-classifier.git
+cd sports-politics-classifier
+```
+
+2. Download the 20 Newsgroups dataset:
+```bash
+# Download from http://qwone.com/~jason/20Newsgroups/
+# Extract to project directory as '20news-18828/'
+```
+
+### Usage
+
+Run the classifier:
+```bash
+python3 B23CS1095_prob4.py
+```
+
+Expected output:
+```
+Loading dataset...
+Total: 4618
+
+Feature: BoW
+Model: NaiveBayes
+Accuracy: 0.9697
+Model: LogReg
+Accuracy: 0.96
+Model: KNN
+Accuracy: 0.855
+
+Feature: Bigrams
+Model: NaiveBayes
+Accuracy: 0.8452
+...
+```
+
+## Project Structure
 
 ```
 sports-politics-classifier/
 │
-├── data/
-│   ├── sports.txt          # Sports documents
-│   └── politics.txt        # Politics documents
-│
-├── src/
-│   └── classifier.py       # Main implementation
-│
-├── results/
-│   └── performance_metrics.txt
-│
-├── README.md               # This file
-└── REPORT.pdf             # Detailed report (5+ pages)
+├── B23CS1095_prob4.py          # Main implementation
+├── README.md                    # This file
+├── report.pdf                   # Detailed analysis report
+├── 20news-18828/               # Dataset directory
+│   ├── rec.sport.baseball/
+│   ├── rec.sport.hockey/
+│   ├── talk.politics.guns/
+│   ├── talk.politics.mideast/
+│   └── talk.politics.misc/
+└── results/
+    └── performance_metrics.txt
 ```
 
-##  Limitations
+## Code Architecture
 
-### 1. Dataset Size
-- **Issue**: Limited to 40 documents (20 per class)
-- **Impact**: May not generalize well to diverse texts
-- **Solution**: Collect larger, more varied dataset
+### Class: TextFeatureExtractor
+Handles all feature extraction (BoW, Bigrams, TF-IDF).
 
-### 2. Feature Representation
-- **Issue**: Simple word-based features miss semantic meaning
-- **Impact**: Similar words treated as completely different
-- **Example**: "football" and "soccer" not recognized as related
-- **Solution**: Use word embeddings or semantic features
+**Methods:**
+- `tokenize(text)` - Converts text to lowercase tokens
+- `get_ngrams(tokens, n)` - Generates n-grams
+- `fit(documents)` - Builds vocabulary from training data
+- `transform(documents)` - Converts documents to feature vectors
+- `fit_transform(documents)` - Combined fit and transform
 
-### 3. Computational Efficiency
-- **Issue**: KNN stores all training data
-- **Impact**: Slow prediction for large datasets
-- **Solution**: Use approximate nearest neighbor methods
+### Class: NaiveBayesClassifier
+Implements multinomial Naive Bayes with Laplace smoothing.
 
-### 4. Hyperparameter Tuning
-- **Issue**: Fixed hyperparameters (K=5, learning_rate=0.1)
-- **Impact**: May not be optimal for all scenarios
-- **Solution**: Implement cross-validation and grid search
+**Methods:**
+- `train(X, y)` - Estimates class priors and feature probabilities
+- `predict(X)` - Returns predicted classes using maximum likelihood
 
-### 5. Class Imbalance
-- **Current**: Balanced dataset (50-50)
-- **Real-world**: Often imbalanced
-- **Impact**: May bias toward majority class
-- **Solution**: Use weighted metrics or resampling
+### Class: LogisticRegressionClassifier
+Binary logistic regression with gradient descent.
 
-### 6. Domain Overlap
-- **Issue**: Some topics overlap (e.g., "sports politics")
-- **Example**: "Government funding for Olympic team"
-- **Impact**: Ambiguous classification
-- **Solution**: Multi-label classification or hierarchical approach
+**Methods:**
+- `train(X, y)` - Optimizes weights via gradient descent
+- `predict(X)` - Returns predicted classes using sigmoid threshold
+- `sigmoid(z)` - Numerically stable sigmoid function
 
-### 7. Preprocessing
-- **Current**: Basic tokenization
-- **Missing**: Stemming, lemmatization, stopword removal
-- **Impact**: Treats "run", "running", "runs" as different words
-- **Solution**: Add NLP preprocessing pipeline
+### Class: KNNClassifier
+K-nearest neighbors with Euclidean distance.
 
+**Methods:**
+- `train(X, y)` - Stores training data
+- `predict(X)` - Finds k nearest neighbors and returns majority vote
+- `dist(a, b)` - Computes Euclidean distance
 
+## Analysis & Insights
 
-##  Author
+### Why BoW Outperforms Bigrams
 
-**Neeraj Mansingh**
-- Email: b23cs1095@iitj.ac.in
+Despite being simpler, BoW performs better because:
+
+1. **Less Sparsity:** With a 500-feature limit, unigrams cover far more of the vocabulary than bigrams
+2. **Better Generalization:** Individual words appear more frequently than specific word pairs
+3. **Statistical Robustness:** More observations per feature leads to better probability estimates
+
+### The TF-IDF Puzzle
+
+TF-IDF's poor performance with Naive Bayes stems from violated assumptions:
+
+- **Naive Bayes expects counts:** The algorithm models P(word|class) as a multinomial distribution over count data
+- **TF-IDF produces normalized values:** Real-valued, scaled features break the probabilistic interpretation
+- **Log-probability calculations fail:** log(TF-IDF value) is meaningless in the Naive Bayes framework
+
+KNN succeeds with TF-IDF because it only relies on distances, not distributional assumptions.
+
+### Practical Implications
+
+For real-world text classification:
+
+1. **Start simple:** Try BoW + Naive Bayes as a baseline
+2. **Match features to algorithms:** Consider algorithm assumptions when choosing features
+3. **Don't over-engineer:** Complex features don't always help
+4. **Test multiple combinations:** Algorithm-feature interactions matter
+
+## Limitations
+
+### Current System
+- Fixed vocabulary size (500 features) limits expressiveness
+- Binary classification only (sports vs politics)
+- No hyperparameter tuning
+- Single evaluation metric (accuracy)
+- No stopword removal or stemming
+- Fixed 80-20 train-test split (no cross-validation)
+
+### Domain Limitations
+- Trained on 1990s newsgroup text
+- May not generalize to modern social media or news articles
+- Domain-specific to sports/politics distinction
+
