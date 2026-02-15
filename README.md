@@ -177,15 +177,14 @@ sports-politics-classifier/
 │
 ├── B23CS1095_prob4.py          # Main implementation
 ├── README.md                    # This file
-├── report.pdf                   # Detailed analysis report
+├── B23CS1095_Report_Final.pdf                   # Detailed analysis report
 ├── 20news-18828/               # Dataset directory
-│   ├── rec.sport.baseball/
-│   ├── rec.sport.hockey/
-│   ├── talk.politics.guns/
-│   ├── talk.politics.mideast/
-│   └── talk.politics.misc/
-└── results/
-    └── performance_metrics.txt
+   ├── rec.sport.baseball/
+   ├── rec.sport.hockey/
+   ├── talk.politics.guns/
+   ├── talk.politics.mideast/
+   └── talk.politics.misc/
+
 ```
 
 ## Code Architecture
@@ -242,15 +241,6 @@ TF-IDF's poor performance with Naive Bayes stems from violated assumptions:
 - **Log-probability calculations fail:** log(TF-IDF value) is meaningless in the Naive Bayes framework
 
 KNN succeeds with TF-IDF because it only relies on distances, not distributional assumptions.
-
-### Practical Implications
-
-For real-world text classification:
-
-1. **Start simple:** Try BoW + Naive Bayes as a baseline
-2. **Match features to algorithms:** Consider algorithm assumptions when choosing features
-3. **Don't over-engineer:** Complex features don't always help
-4. **Test multiple combinations:** Algorithm-feature interactions matter
 
 ## Limitations
 
