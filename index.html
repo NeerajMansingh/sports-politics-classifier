@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sports vs Politics Text Classification</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: auto;
+            padding: 40px;
+        }
+        h1, h2, h3 {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #444;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 3px 6px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Sports vs Politics Text Classification</h1>
+
+<h2>1. Problem Statement</h2>
+<p>
+The objective of this project is to design a binary text classifier that categorizes documents into one of two classes: <strong>Sports</strong> or <strong>Politics</strong>. 
+The system uses classical machine learning techniques with manually implemented algorithms and feature extraction methods.
+</p>
+
+<h2>2. Dataset</h2>
+<p>
+The dataset used for this project is the <strong>20 Newsgroups dataset</strong>, downloaded and processed locally.
+Only the following categories were selected:
+</p>
+
+<ul>
+    <li>rec.sport.baseball</li>
+    <li>rec.sport.hockey</li>
+    <li>talk.politics.guns</li>
+    <li>talk.politics.mideast</li>
+    <li>talk.politics.misc</li>
+</ul>
+
+<p>
+The sports categories were merged into a single class labeled <strong>"sports"</strong> and the politics categories were merged into a single class labeled <strong>"politics"</strong>.
+</p>
+
+<h3>Dataset Statistics</h3>
+<ul>
+    <li>Total documents: 4618</li>
+    <li>Sports documents: 1993</li>
+    <li>Politics documents: 2625</li>
+</ul>
+
+<p>
+The dataset was split into training and testing sets using an 80–20 random split.
+</p>
+
+<h2>3. Feature Representation</h2>
+
+<p>
+Three feature representations were implemented manually:
+</p>
+
+<h3>3.1 Bag of Words (BoW)</h3>
+<p>
+Counts of individual words were used as features. The vocabulary was limited to the top 500 most frequent terms.
+</p>
+
+<h3>3.2 Bigrams</h3>
+<p>
+Only 2-gram features were extracted. The vocabulary was limited to the top 500 most frequent bigrams.
+</p>
+
+<h3>3.3 TF-IDF</h3>
+<p>
+Term Frequency–Inverse Document Frequency was computed manually using:
+</p>
+<p>
+<code>TF = count(term) / total_terms</code><br>
+<code>IDF = log(N / (1 + document_frequency))</code>
+</p>
+
+<h2>4. Classification Algorithms</h2>
+
+<p>
+All classifiers were implemented from scratch without external machine learning libraries.
+</p>
+
+<h3>4.1 Naive Bayes</h3>
+<ul>
+    <li>Multinomial variant</li>
+    <li>Laplace smoothing applied</li>
+    <li>Log-probabilities used for numerical stability</li>
+</ul>
+
+<h3>4.2 Logistic Regression</h3>
+<ul>
+    <li>Binary classification</li>
+    <li>Gradient descent optimization</li>
+    <li>Sigmoid activation function</li>
+</ul>
+
+<h3>4.3 K-Nearest Neighbors (KNN)</h3>
+<ul>
+    <li>Euclidean distance metric</li>
+    <li>k = 5</li>
+</ul>
+
+<h2>5. Experimental Results</h2>
+
+<h3>5.1 Bag of Words</h3>
+<table>
+    <tr>
+        <th>Model</th>
+        <th>Accuracy</th>
+    </tr>
+    <tr>
+        <td>Naive Bayes</td>
+        <td>0.9697</td>
+    </tr>
+    <tr>
+        <td>Logistic Regression</td>
+        <td>0.9600</td>
+    </tr>
+    <tr>
+        <td>KNN</td>
+        <td>0.8550</td>
+    </tr>
+</table>
+
+<h3>5.2 Bigrams</h3>
+<table>
+    <tr>
+        <th>Model</th>
+        <th>Accuracy</th>
+    </tr>
+    <tr>
+        <td>Naive Bayes</td>
+        <td>0.8452</td>
+    </tr>
+    <tr>
+        <td>Logistic Regression</td>
+        <td>0.8333</td>
+    </tr>
+    <tr>
+        <td>KNN</td>
+        <td>0.7413</td>
+    </tr>
+</table>
+
+<h3>5.3 TF-IDF</h3>
+<table>
+    <tr>
+        <th>Model</th>
+        <th>Accuracy</th>
+    </tr>
+    <tr>
+        <td>Naive Bayes</td>
+        <td>0.6310</td>
+    </tr>
+    <tr>
+        <td>Logistic Regression</td>
+        <td>0.5465</td>
+    </tr>
+    <tr>
+        <td>KNN</td>
+        <td>Not Completed</td>
+    </tr>
+</table>
+
+<h2>6. Observations</h2>
+<ul>
+    <li>Bag of Words performed best overall.</li>
+    <li>Naive Bayes achieved the highest accuracy (96.97%).</li>
+    <li>Bigrams reduced performance compared to unigrams.</li>
+    <li>TF-IDF underperformed in this implementation.</li>
+    <li>KNN consistently performed worse than probabilistic and linear models, likely due to high-dimensional feature space.</li>
+</ul>
+
+<h2>7. Limitations</h2>
+<ul>
+    <li>Class imbalance between sports and politics categories.</li>
+    <li>No cross-validation performed.</li>
+    <li>Vocabulary limited to 500 features.</li>
+    <li>No advanced preprocessing such as stopword removal or lemmatization.</li>
+    <li>KNN computationally expensive for large feature spaces.</li>
+</ul>
+
+<h2>8. Conclusion</h2>
+<p>
+The results demonstrate that classical probabilistic and linear classifiers perform effectively on text classification tasks when combined with simple Bag-of-Words features. 
+Naive Bayes showed strong performance due to its suitability for sparse high-dimensional data. 
+Distance-based methods such as KNN were less effective in this setting.
+</p>
+
+</body>
+</html>
